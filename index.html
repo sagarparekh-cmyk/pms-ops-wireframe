@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PMS ops dashboard wireframe</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+:root{
+ --text-primary:#1f1e1d;--text-secondary:#5f5e5a;--text-muted:#888780;
+ --border:rgba(0,0,0,.15);--border-strong:rgba(0,0,0,.3);
+ --page:#faf9f5;--surface-1:#f3f1ea;--surface-2:#ffffff;
+ --bg-accent:#e6f1fb;--text-accent:#0c447c;--border-accent:#378add;
+ --bg-success:#eaf3de;--text-success:#3b6d11;
+ --bg-warning:#faeeda;--text-warning:#854f0b;
+ --bg-danger:#fcebeb;--text-danger:#a32d2d;
+ --radius:8px;
+}
+@media (prefers-color-scheme: dark){
+ :root{
+  --text-primary:#f1efe8;--text-secondary:#b4b2a9;--text-muted:#888780;
+  --border:rgba(255,255,255,.18);--border-strong:rgba(255,255,255,.35);
+  --page:#1c1b19;--surface-1:#262522;--surface-2:#2c2b28;
+  --bg-accent:#0c447c;--text-accent:#b5d4f4;--border-accent:#378add;
+  --bg-success:#27500a;--text-success:#c0dd97;
+  --bg-warning:#633806;--text-warning:#fac775;
+  --bg-danger:#791f1f;--text-danger:#f7c1c1;
+ }
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--page);color:var(--text-primary);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:13px;line-height:1.5}
+.page{max-width:1100px;margin:0 auto;padding:16px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+button{font:inherit;color:var(--text-primary);background:transparent;border:0.5px solid var(--border-strong);border-radius:var(--radius);padding:6px 12px;cursor:pointer}
+button:hover{background:var(--surface-1)}
+button:active{transform:scale(.98)}
+select{font:inherit;color:var(--text-primary);background:var(--surface-2);border:0.5px solid var(--border-strong);border-radius:var(--radius);padding:6px 8px;height:34px}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--border-accent);outline-offset:2px}
+.wf{font-size:13px;color:var(--text-primary)}
+.lay{display:grid;grid-template-columns:168px minmax(0,1fr);gap:16px;align-items:start}
+.lay.min{grid-template-columns:44px minmax(0,1fr)}
+.rail{display:flex;flex-direction:column;gap:20px}
+.tg{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:6px 8px;font-size:12px;color:var(--text-secondary)}
+.tg i{font-size:16px}
+.lay.min .tg .lbl{display:none}
+.st{position:relative;display:flex;gap:10px;align-items:center;border:0.5px solid var(--border);border-radius:var(--radius);padding:10px;background:var(--surface-2);cursor:pointer;text-align:left;width:100%}
+.st:hover{border-color:var(--border-strong);background:var(--surface-2)}
+.st.on{border:2px solid var(--border-accent);padding:9px}
+.st:not(:last-child)::after{content:'';position:absolute;left:23px;top:100%;height:20px;border-left:1px dashed var(--border-strong)}
+.lay.min .st{padding:8px 0;justify-content:center}
+.lay.min .st.on{padding:7px 0}
+.lay.min .st:not(:last-child)::after{left:50%}
+.lay.min .txt{display:none}
+.num{flex:0 0 24px;height:24px;border-radius:50%;background:var(--surface-1);border:0.5px solid var(--border-strong);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500}
+.st.on .num{background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent)}
+.st .t{font-weight:500;font-size:13px}
+.st .c{font-size:11px;color:var(--text-secondary)}
+.st .p{color:var(--text-warning)}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px}
+.fl{display:flex;align-items:center;gap:8px;margin:0 0 12px;font-size:12px;color:var(--text-secondary)}
+.ph{border:0.5px dashed var(--border-strong);border-radius:var(--radius);padding:6px 10px;font-size:12px;color:var(--text-muted);min-width:150px}
+table.t{width:100%;border-collapse:collapse;font-size:12px}
+table.t th{text-align:left;font-weight:500;color:var(--text-secondary);padding:8px 6px;border-bottom:0.5px solid var(--border-strong);font-size:11px}
+table.t td{padding:9px 6px;border-bottom:0.5px solid var(--border)}
+.b{display:inline-block;padding:2px 8px;border-radius:var(--radius);font-size:11px;font-weight:500}
+.b.g{background:var(--bg-success);color:var(--text-success)}
+.b.w{background:var(--bg-warning);color:var(--text-warning)}
+.b.a{background:var(--bg-accent);color:var(--text-accent)}
+.b.r{background:var(--bg-danger);color:var(--text-danger)}
+.b.n{background:var(--surface-1);color:var(--text-secondary);border:0.5px solid var(--border)}
+.up{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin:0 0 14px}
+.card{border:0.5px solid var(--border-strong);background:var(--surface-2);border-radius:12px;padding:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.card .h,.sc .h{font-weight:500;font-size:13px}
+.card .s,.sc .s{font-size:11px;color:var(--text-secondary);margin:2px 0 8px}
+.io{border-radius:var(--radius);padding:10px}
+.io.in{border:0.5px dashed var(--border-strong)}
+.io.out{background:var(--surface-1)}
+.lab{font-size:11px;color:var(--text-secondary);font-weight:500;margin:0 0 6px;display:flex;align-items:center;gap:4px}
+.row2{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.og{margin:0 0 10px}
+.og:last-child{margin:0}
+.og .s{margin:4px 0 0}
+.ts{font-size:11px;color:var(--text-secondary)}
+.err{font-size:12px;color:var(--text-danger);margin-top:4px}
+.cf{background:var(--bg-warning);color:var(--text-warning);border-radius:var(--radius);padding:8px 10px;font-size:12px;margin-top:8px}
+.cf .row2{margin-top:8px;justify-content:flex-start}
+.cf button{color:var(--text-warning)}
+.mut{color:var(--text-secondary)}
+.sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px;margin:0 0 16px}
+.sc{border:0.5px solid var(--border-strong);background:var(--surface-2);border-radius:12px;padding:12px}
+.mm{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 10px}
+.mm div{background:var(--surface-1);border-radius:var(--radius);padding:8px 10px}
+.mm .l{font-size:11px;color:var(--text-secondary)}
+.mm .v{font-size:18px;font-weight:500}
+.bar{display:flex;height:10px;border-radius:var(--radius);overflow:hidden;margin:0 0 8px}
+.sech{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:var(--text-secondary);margin:4px 0 8px}
+.eqn{font-size:12px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.fu{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:0 0 14px}
+.fc{border:0.5px dashed var(--border-strong);border-radius:12px;padding:12px;background:var(--surface-2)}
+.fc .h{font-weight:500;font-size:13px}
+.fc .s{font-size:11px;color:var(--text-secondary);margin:2px 0 8px}
+.act{border:0.5px solid var(--border-strong);background:var(--surface-2);border-radius:12px;padding:12px;margin-top:12px}
+.act .pv{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 0}
+.fs{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:10px}
+.fs div{background:var(--surface-1);border-radius:var(--radius);padding:8px 10px}
+.sl{margin:0 0 12px}
+.sl:last-child{margin:0}
+.fn{font-size:11px;color:var(--text-secondary);overflow-wrap:anywhere;margin-top:4px}
+.sub{font-size:11px;font-weight:500;color:var(--text-secondary);margin:0 0 8px;padding-top:2px}
+input[type=checkbox]{width:16px;height:16px;cursor:pointer}
+.note{margin-top:20px;font-size:12px;color:var(--text-muted)}
+@media (max-width:720px){
+ .lay{grid-template-columns:minmax(0,1fr)}
+ .lay.min{grid-template-columns:minmax(0,1fr)}
+ .rail{flex-direction:row;flex-wrap:wrap;gap:8px}
+ .st{width:auto}
+ .st:not(:last-child)::after{display:none}
+}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="wf">
+  <h1 class="sr-only">PMS ops dashboard wireframe with six steps from BOD to Recon</h1>
+  <div class="tools" style="justify-content:space-between;border-bottom:0.5px solid var(--border);padding-bottom:10px;margin-bottom:14px">
+    <div style="font-weight:500;font-size:15px"><i class="ti ti-layout-dashboard" aria-hidden="true" style="font-size:18px;vertical-align:-3px;margin-right:6px"></i>PMS ops dashboard <span class="b n" style="margin-left:6px">Wireframe · dummy data</span></div>
+    <div class="tools" style="margin:0">
+      <div class="ph"><i class="ti ti-search" aria-hidden="true"></i> Search UCC or client</div>
+      <div class="ph" style="min-width:110px">Strategy: all</div>
+      <div class="ph" style="min-width:110px"><i class="ti ti-calendar" aria-hidden="true"></i> Today</div>
+    </div>
+  </div>
+  <div class="lay" id="lay">
+    <div>
+      <button class="tg" id="tg" onclick="tog()" aria-label="Minimize steps"><i class="ti ti-layout-sidebar-left-collapse" id="tgi" aria-hidden="true"></i><span class="lbl" id="tgl">Minimize steps</span></button>
+      <div class="rail" id="bar" style="margin-top:14px"></div>
+    </div>
+    <div>
+      <div class="fl"><label for="flt">Filter</label><select id="flt" onchange="setf(this.value)" style="min-width:170px"></select></div>
+      <div id="extra"></div>
+      <div style="overflow-x:auto"><table class="t" id="tbl"></table></div>
+      <div id="foot"></div>
+    </div>
+  </div>
+  <p class="note">This is a clickable wireframe with sample data. Uploads, downloads and file generation are simulated, and nothing is saved when you refresh the page.</p>
+</div>
+</div>
+<script>
+var B=function(c,t){return '<span class="b '+c+'">'+t+'</span>'};
+var MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function now(){var d=new Date(),p=function(n){return (n<10?'0':'')+n};return p(d.getDate())+' '+MO[d.getMonth()]+', '+p(d.getHours())+':'+p(d.getMinutes())}
+var R={dph:false,dp97:false,dps1:false,tb:false,pm:false,ts:false,ab:false,as:false,etf:false,cn:false,g:{},err:{},exMF:false,mfv:1,etfv:1,cf:'',up:{},dl:{},sel:{cin:{},cout:{}},msg:{},asel:'feeds',fn:{},fu:{},uerr:{}};
+var AO={feeds:['FEEDS','To WealthSpectrum. Executed buy and sell orders, final MF confirmation.'],ain:['Custody Inward','Fund transfer instruction to custody. Purchase orders.'],aout:['Custody Outward','Units or shares to clearing corporation. Redemption orders.']};
+var F={
+ dph:{name:'DP holding',cover:'Overall holding under PMS',fmt:B('a','CSV'),res:'1,284 rows · 212 ISINs',acc:'.csv'},
+ dp97:{name:'DP97',cover:'Status and progress of DESAT cases',fmt:B('n','Format to be shared'),res:'38 cases · 31 done · 5 in progress · 2 rejected',acc:''},
+ dps1:{name:'DPS01',cover:'Previous day transfers in the demat account, and DESAT rejections',fmt:B('n','Format to be shared'),res:'212 transfers · 3 rejections',acc:''}
+};
+function locked(k){return k=='pm'&&!R.g.cust}
+function slot(key,label,acc){
+ var lk=locked(key);
+ return '<div class="sl">'+(label?'<div class="row2"><span>'+label+'</span>'+(R[key]?B('g','Uploaded'):'')+'</div>':'')
+  +'<input type="file" id="fi_'+key+'" '+(acc?'accept="'+acc+'" ':'')+'style="display:none" onchange="fpick(\''+key+'\',this)">'
+  +'<div class="row2" style="justify-content:flex-start;margin-top:6px"><button onclick="choose(\''+key+'\')"><i class="ti ti-file-search" aria-hidden="true"></i> Choose file</button><button onclick="doUp(\''+key+'\')"><i class="ti ti-upload" aria-hidden="true"></i> '+(R[key]?'Replace':'Upload')+'</button></div>'
+  +'<div class="fn">'+(R.fn[key]?'Selected: '+R.fn[key]:'No file chosen')+'</div>'
+  +(lk?'<div class="ts" style="margin-top:4px"><i class="ti ti-lock" aria-hidden="true"></i> Available after the custody file is generated</div>':'')
+  +(R.uerr[key]?'<div class="err">'+R.uerr[key]+'</div>':'')
+  +'<div class="ts" style="margin-top:4px">Last uploaded: '+(R.up[key]||'—')+(R.fu[key]?' · '+R.fu[key]:'')+'</div></div>';
+}
+var S={
+bod:{no:'1',name:'BOD',cols:['File','Covers','Format','Status','Last uploaded','Result'],
+ chips:[['All',''],['Uploaded','done'],['Pending','pending']],
+ rows:function(){return ['dph','dp97','dps1'].map(function(k){var f=F[k];return [[f.name,f.cover,f.fmt,R[k]?B('g','Uploaded'):B('n','Not uploaded'),R.up[k]||'—',R[k]?f.res:'—'],[R[k]?'done':'pending']]})},
+ extra:function(){
+  var cards=['dph','dp97','dps1'].map(function(k){var f=F[k];return '<div class="fc"><div class="row2"><div class="h">Upload '+f.name+'</div>'+f.fmt+'</div><div class="s">'+f.cover+'</div>'+slot(k,'',f.acc)+'</div>'}).join('');
+  var rej=R.dps1?'<div class="sech">DESAT rejections from DPS01 '+B('r','3')+'</div><div style="overflow-x:auto;margin-bottom:14px"><table class="t"><tr><th>Client</th><th>ISIN</th><th>Reason</th></tr><tr><td>Demo Client B</td><td>INE000D01001</td><td>'+B('r','Rejected by depository')+'</td></tr><tr><td>Demo Client C</td><td>INE000D01002</td><td>'+B('r','Quantity mismatch')+'</td></tr><tr><td>Demo Client H</td><td>INE000D01003</td><td>'+B('r','Account details mismatch')+'</td></tr></table></div>':'';
+  return '<div class="fu">'+cards+'</div>'+rej;}},
+onb:{no:'2',name:'Onboarding',cols:['UCC','Client','Strategy','Latest status','Updated'],
+ chips:[['All',''],['In progress','pending'],['Activated','done'],['Rejected','rej']],
+ rows:[
+ [['DEMO001','Demo Client A','WealthEdge',B('g','Activated'),'02 Oct'],['done']],
+ [['DEMO002','Demo Client B','AlphaEdge',B('w','KYC pending'),'04 Oct'],['pending']],
+ [['DEMO003','Demo Client C','WealthEdge',B('a','Agreement sent'),'03 Oct'],['pending']],
+ [['DEMO004','Demo Client D (NRI)','AlphaEdge',B('a','Offline onboarding'),'01 Oct'],['pending']],
+ [['DEMO005','Demo Client E','WealthEdge',B('r','Rejected'),'30 Sep'],['rej']]]},
+cin:{no:'3',name:'Corpus in',sel:true,btn:'Generate corpus in files',cols:['Client','Strategy','Corpus type','Cash / security','AUM / amount','Security leg','Overall'],
+ chips:[['All',''],['Initial corpus','init'],['Additional corpus','add'],['Cash only','cash'],['Security only','sec'],['Both','both'],['Pending','pending'],['Done','done']],
+ rows:[
+ [['Demo Client A','WealthEdge',B('a','Additional'),B('a','Cash'),'₹25,00,000 · '+B('g','Received'),'<span class="mut">n/a</span>',B('g','Done')],['add','cash','done'],{amt:2500000,isins:0}],
+ [['Demo Client B','AlphaEdge',B('n','Initial'),B('n','Security'),'<span class="mut">n/a</span>','6 ISINs · '+B('w','DESAT pending'),B('w','Pending')],['init','sec','pending'],{amt:0,isins:6}],
+ [['Demo Client C','WealthEdge',B('n','Initial'),B('n','Both'),'₹10,00,000 · '+B('g','Received'),'3 ISINs · '+B('w','Awaiting'),B('w','Pending')],['init','both','pending'],{amt:1000000,isins:3}],
+ [['Demo Client D','AlphaEdge',B('a','Additional'),B('a','Cash'),'₹50,00,000 · '+B('w','Awaiting'),'<span class="mut">n/a</span>',B('w','Pending')],['add','cash','pending'],{amt:5000000,isins:0}]]},
+ord:{no:'4',name:'Order booking',cols:['Batch','Strategy','Side','Instrument','Clients','Orders','Status'],
+ chips:[['All',''],['Buy','buy'],['Sell','sell'],['MF','mf'],['ETF','etf'],['Pending','pending']],
+ rows:[
+ [['B-0510-01','WealthEdge',B('g','Buy'),B('n','MF'),'42','126',B('w','Draft')],['buy','mf','pending']],
+ [['B-0510-02','AlphaEdge',B('g','Buy'),B('n','ETF'),'11','18',B('a','Placed')],['buy','etf','pending']],
+ [['B-0510-03','WealthEdge',B('r','Sell'),B('n','MF'),'9','27',B('g','Confirmed')],['sell','mf','done']],
+ [['B-0510-04','AlphaEdge',B('r','Sell'),B('n','ETF'),'4','7',B('w','Draft')],['sell','etf','pending']]]},
+cout:{no:'5',name:'Corpus out',sel:true,btn:'Generate corpus out files',cols:['Client','Strategy','Reason','Type','Cash / securities','Status'],
+ chips:[['All',''],['Cash','cash'],['Security','sec'],['Both','both'],['Pending','pending'],['Done','done']],
+ rows:[
+ [['Demo Client F','WealthEdge','Full closure',B('n','Both'),'₹4,20,000 + 5 ISINs',B('w','In progress')],['both','pending'],{amt:420000,isins:5}],
+ [['Demo Client G','AlphaEdge','Partial withdrawal',B('a','Cash'),'₹8,00,000',B('g','Paid out')],['cash','done'],{amt:800000,isins:0}],
+ [['Demo Client H','WealthEdge','Full closure',B('n','Security'),'8 ISINs',B('w','Pending')],['sec','pending'],{amt:0,isins:8}]]},
+rec:{no:'6',name:'Recon',cols:['File','Type','Strategy','Matched','Unmatched','Status'],
+ chips:[['All',''],['MF','mf'],['ETF','etf'],['Pending','pending'],['Done','done']],
+ rows:[
+ [['BSE order confirmation T day · Buy · Provisional order',B('n','MF'),'WealthEdge','126','0',B('g','Matched')],['mf','done']],
+ [['BSE order confirmation T day · Buy · Payment mapping',B('n','MF'),'WealthEdge','—','—',B('n','Not uploaded')],['mf','pending']],
+ [['BSE order confirmation T day · Sell',B('n','MF'),'WealthEdge','27','0',B('g','Matched')],['mf','done']],
+ [['BSE allotment confirmation (Buy)',B('n','MF'),'WealthEdge','126','0',B('g','Matched')],['mf','done']],
+ [['BSE allotment confirmation (Sell)',B('n','MF'),'WealthEdge','24',B('r','3 breaks'),B('w','Review')],['mf','pending']],
+ [['ETF order confirmation',B('n','ETF'),'AlphaEdge','—','—',B('n','Not uploaded')],['etf','pending']],
+ [['Contract note',B('n','ETF'),'AlphaEdge','—','—',B('n','Not uploaded')],['etf','pending']]],
+ extra:function(){
+  var grp=function(k){return (k=='ab'||k=='as')?'mf':'etf'};
+  var vlabel={ab:'allotment',as:'allotment',etf:'ETF',cn:'ETF'};
+  function conf(g){
+   if(!R.cf||grp(R.cf)!=g)return '';
+   var v=g=='mf'?R.mfv:R.etfv;
+   return '<div class="cf">Reprocess the 09 Oct '+vlabel[R.cf]+' file in full? This replaces v'+v+' and rebuilds the whole day from the new file. Open items settle against the new units. Outputs already generated will need regenerating.<div class="row2"><button onclick="okRe()">Reprocess day</button><button onclick="R.cf=\'\';draw()">Cancel</button></div></div>';
+  }
+  function og(k,label,icon,sub,need){
+   var g=R.g[k],e=R.err[k];
+   var right=g=='stale'?'<span style="display:flex;gap:6px;align-items:center">'+B('w','Stale')+'<button aria-label="Download" onclick="dl(\''+k+'\')"><i class="ti ti-download" aria-hidden="true"></i></button></span>':(g?'<span style="display:flex;gap:6px;align-items:center">'+B('g','Ready')+'<button aria-label="Download" onclick="dl(\''+k+'\')"><i class="ti ti-download" aria-hidden="true"></i></button></span>':'');
+   return '<div class="og"><div class="row2"><button onclick="gen(\''+k+'\')"><i class="ti '+icon+'" aria-hidden="true"></i> '+(g=='stale'?'Regenerate':label)+'</button>'+right+'</div><div class="s">'+sub+'</div>'+(need?'<div class="ts"><i class="ti ti-lock" aria-hidden="true"></i> '+need+'</div>':'')+'<div class="ts" style="margin-top:2px">Last downloaded: '+(R.dl[k]||'—')+'</div>'+(e?'<div class="err">'+e+'</div>':'')+'</div>';
+  }
+  function ogsel(){
+   var k=R.asel,g=R.g[k],e=R.err[k];
+   var opts=Object.keys(AO).map(function(x){return '<option value="'+x+'"'+(x==k?' selected':'')+'>'+AO[x][0]+'</option>'}).join('');
+   var st=g=='stale'?B('w','Stale'):(g?B('g','Ready'):'');
+   return '<div class="row2"><select aria-label="Output file" onchange="R.asel=this.value;draw()" style="flex:1;min-width:150px">'+opts+'</select><button onclick="gen(\''+k+'\')"><i class="ti ti-file-export" aria-hidden="true"></i> '+(g=='stale'?'Regenerate':'Generate')+'</button></div>'
+    +'<div class="s" style="margin:8px 0 0">'+AO[k][1]+'</div>'
+    +(g?'<div class="row2" style="margin-top:8px;justify-content:flex-start">'+st+'<button aria-label="Download" onclick="dl(\''+k+'\')"><i class="ti ti-download" aria-hidden="true"></i> Download</button></div>':'')
+    +'<div class="ts" style="margin-top:6px">Last downloaded: '+(R.dl[k]||'—')+'</div>'+(e?'<div class="err">'+e+'</div>':'');
+  }
+  var hd='<div class="lab"><i class="ti ti-arrow-bar-up" aria-hidden="true"></i>Output '+B('n','Format to be shared')+'</div>';
+  var inl=function(v){return '<div class="lab"><i class="ti ti-arrow-bar-to-down" aria-hidden="true"></i>Input'+(v?' '+B('a','v'+v+(v>1?' · reprocessed':'')):'')+'</div>'};
+  var m2=R.mfv>1,e2=R.etfv>1;
+  var mf='<div class="sc"><div class="row2"><div class="h">Order recon snapshot</div><span>'+(m2?B('a','v'+R.mfv+' reprocessed')+' ':'')+B('a','Mutual fund orders')+'</span></div><div class="s">Placed 08 Oct vs allotted 09 Oct · matched on order number'+(m2?' · 4 open orders settled':'')+'</div>'
+   +'<div class="mm"><div><div class="l">Placed</div><div class="v">153</div></div><div><div class="l">Allotted</div><div class="v">'+(m2?145:141)+'</div></div><div><div class="l">Rejected</div><div class="v">6</div></div><div><div class="l">Open</div><div class="v">'+(m2?2:6)+'</div></div></div>'
+   +'<div class="bar"><div style="width:'+(m2?94.8:92.2)+'%;background:var(--text-success)"></div><div style="width:3.9%;background:var(--text-danger)"></div><div style="width:'+(m2?1.3:3.9)+'%;background:var(--text-warning)"></div></div>'
+   +'<div class="row2"><div class="eqn"><span>153 = '+(m2?'145':'141')+' + 6 + '+(m2?'2':'6')+'</span>'+B('g','Balanced')+B('w',(m2?2:4)+' exceptions')+'</div><button onclick="R.exMF=!R.exMF;draw()">'+(R.exMF?'Hide exceptions':'View exceptions')+'</button></div>'
+   +(R.exMF?'<div style="overflow-x:auto;margin-top:8px"><table class="t"><tr><th>Order no.</th><th>Side</th><th>Issue</th><th>Age</th></tr>'
+     +(m2?'':'<tr><td>20261008-0412</td><td>Buy</td><td>'+B('w','No allotment yet')+'</td><td>T+1</td></tr><tr><td>20261008-0431</td><td>Buy</td><td>'+B('r','Amount mismatch')+'</td><td>T+1</td></tr>')
+     +'<tr><td>20261008-0507</td><td>Sell</td><td>'+B('w','No allotment yet')+'</td><td>T+1</td></tr><tr><td>20261008-0519</td><td>Sell</td><td>'+B('n','Rejected by BSE')+'</td><td>T</td></tr></table></div>':'')
+   +'</div>';
+  var rows=[['GOLDBEES (B)','800','800','794','6',B('g','Tallied')],['NIFTYBEES (B)','1,500','1,500','1,500','0',B('g','Tallied')],['BANKBEES (B)','400','400','398','2',B('g','Tallied')],e2?['LIQUIDBEES (S)','300','300','298','2',B('g','Tallied')]:['LIQUIDBEES (S)','300','295','—','—',B('r','Qty gap')]];
+  var etf='<div class="sc"><div class="row2"><div class="h">Order recon snapshot</div><span>'+(e2?B('a','v'+R.etfv+' reprocessed')+' ':'')+B('a','ETF orders')+'</span></div><div class="s">Order confirmation vs contract note · pool level, allocated to clients</div>'
+   +'<div class="mm"><div><div class="l">Scrips tallied</div><div class="v">'+(e2?'4 of 4':'3 of 4')+'</div></div><div><div class="l">Qty gap</div><div class="v">'+(e2?0:5)+'</div></div><div><div class="l">Residual units</div><div class="v">'+(e2?10:8)+'</div></div><div><div class="l">Charges</div><div class="v" style="font-size:14px;padding-top:4px">Tallied</div></div></div>'
+   +'<div style="overflow-x:auto"><table class="t"><tr><th>Scrip</th><th>Order qty</th><th>CN qty</th><th>Allocated</th><th>Residual</th><th></th></tr>'
+   +rows.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td><td>'+r[5]+'</td></tr>'}).join('')+'</table></div>'
+   +'<div class="eqn" style="margin-top:8px"><span>Charges: '+(e2?'₹1,305.40 allocated + ₹12.80 pool residue = ₹1,318.20':'₹1,271.90 allocated + ₹12.50 pool residue = ₹1,284.40')+' per contract note</span></div></div>';
+  var c1='<div class="card"><div class="io in">'+inl(0)+'<div class="h" style="margin-bottom:8px">BSE order confirmation T day</div>'
+   +'<div class="sub">Buy side</div>'+slot('tb','1. Provisional order','')+slot('pm','2. Payment mapping file','')
+   +'<div class="sub" style="margin-top:12px">Sell side</div>'+slot('ts','Sell file','')+'</div>'
+   +'<div class="io out">'+hd+og('cust','Generate custody file','ti-file-export','Fund transfer instruction. Purchase orders.',R.tb?'':'Upload the provisional order first')+og('red','Redemption unit transfer','ti-file-export','Units or shares to clearing corporation. Redemption orders.',R.ts?'':'Upload the sell file first')+'</div></div>';
+  var c2='<div class="card"><div class="io in">'+inl((R.ab||R.as)?R.mfv:0)+'<div class="h" style="margin-bottom:8px">BSE allotment confirmation</div>'+slot('ab','Buy side','')+slot('as','Sell side','')+conf('mf')+'</div>'
+   +'<div class="io out">'+hd+ogsel()+'</div></div>';
+  var c3='<div class="card"><div class="io in">'+inl((R.etf||R.cn)?R.etfv:0)+'<div class="h" style="margin-bottom:8px">ETF order confirmation and contract note</div>'+slot('etf','1. ETF order confirmation','')+slot('cn','2. Contract note','')+conf('etf')+'</div>'
+   +'<div class="io out">'+hd+og('alc','Allocation for custody','ti-file-export','Units and charges by client, to custody.')+og('alw','Allocation for WealthSpectrum','ti-file-export','Units and charges by client, to WealthSpectrum.')+'</div></div>';
+  return '<div class="sech"><i class="ti ti-chart-donut" aria-hidden="true"></i>Snapshot</div><div class="sum">'+mf+etf+'</div>'
+   +'<div class="sech">'+B('a','Mutual fund orders')+' Files</div><div class="up">'+c1+c2+'</div>'
+   +'<div class="sech">'+B('a','ETF orders')+' Files</div><div class="up">'+c3+'</div>';}}
+};
+var order=['bod','onb','cin','ord','cout','rec'],cur='bod',flt='';
+function gr(k){var r=S[k].rows;return typeof r=='function'?r():r}
+function pend(k){return gr(k).filter(function(r){return r[1].indexOf('done')<0&&r[1].indexOf('rej')<0}).length}
+function isP(r){return r[1].indexOf('pending')>=0}
+function selOf(k){return R.sel[k]||(R.sel[k]={})}
+function visP(){return gr(cur).filter(function(r){return (!flt||r[1].indexOf(flt)>=0)&&isP(r)})}
+function inr(n){return '₹'+n.toLocaleString('en-IN')}
+function calc(k){
+ var sl=selOf(k),sel=gr(k).filter(function(r){return isP(r)&&sl[r[0][0]]}),c=[],s=[];
+ sel.forEach(function(r){var t=r[1];if(t.indexOf('cash')>=0||t.indexOf('both')>=0)c.push(r);if(t.indexOf('sec')>=0||t.indexOf('both')>=0)s.push(r)});
+ var amt=c.reduce(function(a,r){return a+r[2].amt},0),is=s.reduce(function(a,r){return a+r[2].isins},0);
+ return {n:sel.length,c:c.length,s:s.length,amt:amt,isins:is}
+}
+function foot(){
+ var s=S[cur];
+ if(!s.sel)return '';
+ var k=cur,x=calc(k),w=k=='cin'?'in':'out';
+ return '<div class="act"><div class="row2"><div><div class="h" style="font-weight:500">'+x.n+' pending selected</div><div class="pv">'
+  +B(x.c?'a':'n','Cash file · '+x.c+' clients'+(x.c?' · '+inr(x.amt):''))
+  +B(x.s?'a':'n','Security file · '+x.s+' clients'+(x.s?' · '+x.isins+' ISINs':''))
+  +B('n','Format to be shared')+'</div></div><button onclick="genF(\''+k+'\')"><i class="ti ti-file-export" aria-hidden="true"></i> '+s.btn+'</button></div>'
+  +(R.msg[k]?'<div class="err">'+R.msg[k]+'</div>':'')
+  +'<div class="fs"><div><div class="h" style="font-weight:500;font-size:12px">Cash corpus '+w+' file</div><div class="ts">Last downloaded: '+(R.dl[k+'_cash']||'—')+'</div></div><div><div class="h" style="font-weight:500;font-size:12px">Security corpus '+w+' file</div><div class="ts">Last downloaded: '+(R.dl[k+'_sec']||'—')+'</div></div></div></div>';
+}
+function draw(){
+ document.getElementById('bar').innerHTML=order.map(function(k){var s=S[k];return '<button class="st'+(k==cur?' on':'')+'" title="'+s.name+' ('+pend(k)+' pending)" onclick="pick(\''+k+'\')"><span class="num">'+s.no+'</span><span class="txt"><div class="t">'+s.name+'</div><div class="c">'+gr(k).length+' total · <span class="p">'+pend(k)+' pending</span></div></span></button>'}).join('');
+ var s=S[cur];
+ document.getElementById('flt').innerHTML=s.chips.map(function(c){return '<option value="'+c[1]+'"'+(c[1]==flt?' selected':'')+'>'+c[0]+'</option>'}).join('');
+ document.getElementById('extra').innerHTML=s.extra?s.extra():'';
+ var rows=gr(cur).filter(function(r){return !flt||r[1].indexOf(flt)>=0});
+ var sl=s.sel?selOf(cur):{},vp=s.sel?visP():[],allOn=vp.length>0&&vp.every(function(r){return sl[r[0][0]]});
+ var head='<tr>'+(s.sel?'<th style="width:28px"><input type="checkbox" aria-label="Select all pending" '+(allOn?'checked':'')+' onchange="tickAll(this.checked)"></th>':'')+s.cols.map(function(c){return '<th>'+c+'</th>'}).join('')+'</tr>';
+ document.getElementById('tbl').innerHTML=head+rows.map(function(r){
+  var cb=s.sel?'<td>'+(isP(r)?'<input type="checkbox" aria-label="Select '+r[0][0]+'" '+(sl[r[0][0]]?'checked':'')+' onchange="tick(\''+r[0][0]+'\',this.checked)">':'<span class="mut">—</span>')+'</td>':'';
+  return '<tr>'+cb+r[0].map(function(c){return '<td>'+c+'</td>'}).join('')+'</tr>'}).join('');
+ document.getElementById('foot').innerHTML=foot();
+}
+function tick(n,v){selOf(cur)[n]=v;R.msg[cur]='';draw()}
+function tickAll(v){var sl=selOf(cur);visP().forEach(function(r){sl[r[0][0]]=v});R.msg[cur]='';draw()}
+function genF(k){
+ var x=calc(k);
+ if(!x.n){R.msg[k]='Select at least one pending client.';draw();return}
+ var t=now();
+ if(x.c)R.dl[k+'_cash']=t;
+ if(x.s)R.dl[k+'_sec']=t;
+ R.msg[k]='';draw()}
+function choose(k){
+ if(locked(k)){R.uerr[k]='Generate the custody file first.';draw();return}
+ var el=document.getElementById('fi_'+k);if(el)el.click()}
+function fpick(k,el){
+ var f=el.files&&el.files[0];if(!f)return;
+ if(k=='dph'&&!/\.csv$/i.test(f.name)){R.uerr[k]='Choose a CSV file.';draw();return}
+ R.fn[k]=f.name;R.uerr[k]='';draw()}
+function doUp(k){
+ if(locked(k)){R.uerr[k]='Generate the custody file first.';draw();return}
+ if(!R.fn[k]){R.uerr[k]='Choose a file first.';draw();return}
+ if(R[k]&&(k=='ab'||k=='as'||k=='etf'||k=='cn')){R.cf=k;draw();return}
+ R[k]=true;R.up[k]=now();R.fu[k]=R.fn[k];R.fn[k]='';R.uerr[k]='';R.err={};draw()}
+function okRe(){
+ var k=R.cf,mf=(k=='ab'||k=='as');
+ R.up[k]=now();R.fu[k]=R.fn[k];R.fn[k]='';
+ if(mf){R.mfv++;['feeds','ain','aout'].forEach(function(x){if(R.g[x])R.g[x]='stale'})}
+ else{R.etfv++;if(R.g.alc)R.g.alc='stale';if(R.g.alw)R.g.alw='stale'}
+ R.cf='';R.err={};draw()}
+function dl(k){R.dl[k]=now();draw()}
+function gen(k){
+ var msg='';
+ if(k=='feeds'){if(!(R.ab||R.as))msg='Upload the BSE allotment confirmation first.'}
+ else if(k=='ain'){if(!R.ab)msg='Upload the allotment buy side file first.'}
+ else if(k=='aout'){if(!R.as)msg='Upload the allotment sell side file first.'}
+ else if(k=='cust'){if(!R.tb)msg='Upload the provisional order file first.'}
+ else if(k=='red'){if(!R.ts)msg='Upload the sell file first.'}
+ else{if(!R.etf)msg='Upload the ETF order confirmation first.';else if(!R.cn)msg='Upload the contract note first.'}
+ if(msg){R.err[k]=msg}else{R.g[k]=true;R.err[k]=''}
+ draw()}
+function tog(){
+ var l=document.getElementById('lay'),m=l.classList.toggle('min');
+ document.getElementById('tgi').className='ti '+(m?'ti-layout-sidebar-left-expand':'ti-layout-sidebar-left-collapse');
+ document.getElementById('tgl').textContent=m?'Expand steps':'Minimize steps';
+ document.getElementById('tg').setAttribute('aria-label',m?'Expand steps':'Minimize steps');
+}
+function pick(k){cur=k;flt='';draw()}
+function setf(f){flt=f;draw()}
+draw();
+</script>
+</body>
+</html>
